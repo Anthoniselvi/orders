@@ -75,12 +75,79 @@ export default function GetReports() {
 
     setReportResults(formattedResults);
   };
+  const generateMonthlyReports = () => {
+    const startDate = new Date("2023-04-01"); // Set the desired starting date in the format "YYYY-MM-DD"
+    const currentDate = new Date();
+    const monthlyResults = {};
+
+    const datesInRange = [];
+
+    // Generate an array of all dates within the range, including previous months
+    let currentMonth = startDate.getMonth();
+    let currentYear = startDate.getFullYear();
+
+    while (
+      currentYear < currentDate.getFullYear() ||
+      (currentYear === currentDate.getFullYear() &&
+        currentMonth <= currentDate.getMonth())
+    ) {
+      const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
+      const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
+      datesInRange.push({ firstDay: firstDayOfMonth, lastDay: lastDayOfMonth });
+
+      // Move to the next month
+      currentMonth++;
+      if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+      }
+    }
+
+    datesInRange.forEach(({ firstDay, lastDay }) => {
+      const monthStart = new Date(firstDay);
+      const monthEnd = new Date(lastDay);
+      const monthRange = `${formatDate(monthStart)} - ${formatDate(monthEnd)}`;
+
+      monthlyResults[monthRange] = {};
+
+      // Initialize order count to 0 for all customer names
+      ordersData.forEach((order) => {
+        const customerName = order["Customer Name"];
+        monthlyResults[monthRange][customerName] = 0;
+      });
+
+      ordersData.forEach((order) => {
+        const orderDate = new Date(order["Order Date"]);
+
+        if (orderDate >= firstDay && orderDate <= lastDay) {
+          const customerName = order["Customer Name"];
+          monthlyResults[monthRange][customerName] += 1;
+        }
+      });
+    });
+
+    const formattedResults = Object.entries(monthlyResults).map(
+      ([monthRange, customerData]) => ({
+        period: monthRange,
+        customerCounts: Object.entries(customerData).map(
+          ([customerName, orderCount]) => ({
+            customerName,
+            orderCount,
+          })
+        ),
+      })
+    );
+
+    setReportResults(formattedResults);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (inputValue === "weekly") {
       generateWeeklyReports();
+    } else if (inputValue === "monthly") {
+      generateMonthlyReports();
     } else {
       setReportResults([]); // Clear the report results if no option is selected
     }
@@ -115,7 +182,9 @@ export default function GetReports() {
         >
           <option value="">Select an option</option>
           <option value="weekly">Weekly</option>
+          <option value="monthly">Monthly</option>
         </select>
+
         <button type="submit">Submit</button>
       </form>
       {reportResults.length > 0 && (
