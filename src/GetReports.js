@@ -31,6 +31,9 @@ export default function GetReports() {
       startDate.setDate(startDate.getDate() + 7); // Move to the next Sunday
     }
 
+    // Reverse the datesInRange array to display results in reverse order
+    datesInRange.reverse();
+
     datesInRange.forEach((date) => {
       const weekStart = new Date(date);
       weekStart.setDate(weekStart.getDate() - weekStart.getDay()); // Get the start date of the week
