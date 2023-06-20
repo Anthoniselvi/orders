@@ -4,6 +4,8 @@ import { ordersData } from "./ordersData";
 export default function GetReports() {
   const [inputValue, setInputValue] = useState("");
   const [reportResults, setReportResults] = useState([]);
+  const [duplicateCustomers, setDuplicateCustomers] = useState([]);
+  const [duplicateAddresses, setDuplicateAddresses] = useState([]);
 
   const handleInputChange = (e) => {
     const selectedValue = e.target.value;
@@ -141,6 +143,47 @@ export default function GetReports() {
     setReportResults(formattedResults);
   };
 
+  const findDuplicateCustomers = () => {
+    const mobileNumbers = {};
+    const addresses = {};
+
+    ordersData.forEach((order) => {
+      const customerID = order["Customer ID"];
+      const mobileNumber = order["Mobile Number"];
+      const address = order["Address"];
+
+      // Group by mobile number
+      if (mobileNumbers[mobileNumber]) {
+        mobileNumbers[mobileNumber].push(customerID);
+      } else {
+        mobileNumbers[mobileNumber] = [customerID];
+      }
+
+      // Group by address
+      if (addresses[address]) {
+        addresses[address].push(customerID);
+      } else {
+        addresses[address] = [customerID];
+      }
+    });
+
+    const duplicateMobileNumbers = Object.entries(mobileNumbers)
+      .filter(([_, customerIDs]) => customerIDs.length > 1)
+      .map(([mobileNumber, customerIDs]) => ({
+        mobileNumber,
+        customerIDs,
+      }));
+
+    const duplicateAddressesList = Object.entries(addresses)
+      .filter(([_, customerIDs]) => customerIDs.length > 1)
+      .map(([address, customerIDs]) => ({
+        address,
+        customerIDs,
+      }));
+
+    setDuplicateCustomers(duplicateMobileNumbers);
+    setDuplicateAddresses(duplicateAddressesList);
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -151,6 +194,8 @@ export default function GetReports() {
     } else {
       setReportResults([]); // Clear the report results if no option is selected
     }
+
+    findDuplicateCustomers();
   };
 
   const getAllCustomerNames = (reportResults) => {
@@ -217,6 +262,32 @@ export default function GetReports() {
               )}
             </tbody>
           </table>
+        </div>
+      )}
+      {duplicateCustomers.length > 0 && (
+        <div>
+          <h2>Duplicate Customers:</h2>
+          <ul>
+            {duplicateCustomers.map((customer, index) => (
+              <li key={index}>
+                Mobile Number: {customer.mobileNumber}, Customer IDs:{" "}
+                {customer.customerIDs.join(", ")}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {duplicateAddresses.length > 0 && (
+        <div>
+          <h2>Duplicate Customers by Address:</h2>
+          <ul>
+            {duplicateAddresses.map((customer, index) => (
+              <li key={index}>
+                Address: {customer.address}, Customer IDs:{" "}
+                {customer.customerIDs.join(", ")}
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>

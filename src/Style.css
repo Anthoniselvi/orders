@@ -1,0 +1,70 @@
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .form {
+    display: flex;
+    margin-bottom: 20px;
+  }
+  
+  .select {
+    flex: 1;
+    padding: 8px;
+    font-size: 16px;
+  }
+  
+  .button {
+    padding: 8px 16px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .duplicate-customers {
+    margin-bottom: 20px;
+  }
+  
+  .subtitle {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .list-item {
+    margin-bottom: 10px;
+  }
+  
+  .customer-info {
+    display: block;
+    font-size: 16px;
+  }
+  
+  .report-results {
+    margin-bottom: 20px;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .table th,
+  .table td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .table th {
+    background-color: #f0f0f0;
+  }
+  
+  
