@@ -232,64 +232,68 @@ export default function GetReports() {
 
         <button type="submit">Submit</button>
       </form>
-      {reportResults.length > 0 && (
-        <div>
-          <h2>Report Results:</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Customer Name</th>
-                {reportResults.map((result, index) => (
-                  <th key={index}>{result.period}</th>
+      <div style={{ display: "flex", gap: "5%" }}>
+        {reportResults.length > 0 && (
+          <div style={{ width: "65%", overflowX: "scroll" }}>
+            <h2>Report Results:</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Customer Name</th>
+                  {reportResults.map((result, index) => (
+                    <th key={index}>{result.period}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {Object.keys(getAllCustomerNames(reportResults)).map(
+                  (customerName, index) => (
+                    <tr key={index}>
+                      <td>{customerName}</td>
+                      {reportResults.map((result, index) => (
+                        <td key={index}>
+                          {getOrderCountForCustomer(
+                            result.customerCounts,
+                            customerName
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  )
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+        <div style={{ width: "30%", overflowX: "scroll" }}>
+          {duplicateCustomers.length > 0 && (
+            <div>
+              <h2>Duplicate Customers:</h2>
+              <ul>
+                {duplicateCustomers.map((customer, index) => (
+                  <li key={index}>
+                    Mobile Number: {customer.mobileNumber}, Customer IDs:{" "}
+                    {customer.customerIDs.join(", ")}
+                  </li>
                 ))}
-              </tr>
-            </thead>
-            <tbody>
-              {Object.keys(getAllCustomerNames(reportResults)).map(
-                (customerName, index) => (
-                  <tr key={index}>
-                    <td>{customerName}</td>
-                    {reportResults.map((result, index) => (
-                      <td key={index}>
-                        {getOrderCountForCustomer(
-                          result.customerCounts,
-                          customerName
-                        )}
-                      </td>
-                    ))}
-                  </tr>
-                )
-              )}
-            </tbody>
-          </table>
+              </ul>
+            </div>
+          )}
+          {duplicateAddresses.length > 0 && (
+            <div>
+              <h2>Duplicate Customers by Address:</h2>
+              <ul>
+                {duplicateAddresses.map((customer, index) => (
+                  <li key={index}>
+                    Address: {customer.address}, Customer IDs:{" "}
+                    {customer.customerIDs.join(", ")}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
-      )}
-      {duplicateCustomers.length > 0 && (
-        <div>
-          <h2>Duplicate Customers:</h2>
-          <ul>
-            {duplicateCustomers.map((customer, index) => (
-              <li key={index}>
-                Mobile Number: {customer.mobileNumber}, Customer IDs:{" "}
-                {customer.customerIDs.join(", ")}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-      {duplicateAddresses.length > 0 && (
-        <div>
-          <h2>Duplicate Customers by Address:</h2>
-          <ul>
-            {duplicateAddresses.map((customer, index) => (
-              <li key={index}>
-                Address: {customer.address}, Customer IDs:{" "}
-                {customer.customerIDs.join(", ")}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      </div>
     </div>
   );
 }

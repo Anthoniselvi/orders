@@ -1,11 +1,11 @@
 import logo from "./logo.svg";
 import "./App.css";
-import GetReports from "./GetReports"; // Update the import statement
+import Dashboard from "./Dashboard";
 
 function App() {
   return (
     <div className="App">
-      <GetReports />
+      <Dashboard />
     </div>
   );
 }
