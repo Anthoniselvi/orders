@@ -263,7 +263,7 @@ export default function Reports() {
     <div style={{ display: "flex", width: "calc(100vw - 250px)" }}>
       <div style={{ width: "100%", display: "flex", gap: "3%" }}>
         <div style={{ width: "60%" }}>
-          <h3>Duplicate by Mobile Numbers</h3>
+          <h3>Orders - Reports</h3>
           <AppBar position="static" sx={{ background: "none" }}>
             <Toolbar>
               <Tabs value={inputValue} onChange={handleInputChange}>

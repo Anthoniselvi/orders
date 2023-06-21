@@ -44,7 +44,7 @@ export default function DuplicatesTable({
   return (
     <div style={{ width: "100%" }}>
       <Box sx={{ height: 400, width: "100%" }}>
-        <h3>Duplicate by Mobile Numbers</h3>
+        <h3>Duplicate by Mobile Number</h3>
         <DataGrid
           sx={{ bgcolor: "#ffffff" }}
           rows={duplicateMobileRows}
@@ -52,7 +52,7 @@ export default function DuplicatesTable({
           pageSize={5}
           disableSelectionOnClick
         />
-        <h3>Duplicate by Addresses</h3>
+        <h3>Duplicate by Address</h3>
         <DataGrid
           sx={{ bgcolor: "#ffffff" }}
           rows={duplicateAddressRows}
