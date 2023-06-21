@@ -5,6 +5,7 @@ import { DataGrid } from "@mui/x-data-grid";
 export default function ReportsTable({ reportResults }) {
   const periods = reportResults.map((report) => report.period);
   const columns = [
+    { field: "customerID", headerName: "Customer ID", width: 200 },
     { field: "customerName", headerName: "Customer Name", width: 200 },
     ...periods.map((period) => ({
       field: period,
@@ -23,6 +24,7 @@ export default function ReportsTable({ reportResults }) {
       } else {
         const newRow = {
           id: `${customer.customerName}-${report.period}`,
+          customerID: customer.customerID, // Include customerID field
           customerName: customer.customerName,
         };
         newRow[report.period] = customer.orderCount;
@@ -33,12 +35,12 @@ export default function ReportsTable({ reportResults }) {
   }, []);
 
   return (
-    <Box sx={{ height: 400, width: "100%" }}>
+    <Box sx={{ height: 400, width: "100%", bgcolor: "#ffffff" }}>
       <DataGrid
         rows={rows}
         columns={columns}
         pageSize={5}
-        checkboxSelection
+        // checkboxSelection
         disableSelectionOnClick
       />
     </Box>

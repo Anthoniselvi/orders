@@ -2,31 +2,7 @@ import React, { useState, useEffect } from "react";
 import { AppBar, Toolbar, Tabs, Tab } from "@mui/material";
 import { ordersData } from "./ordersData";
 import ReportsTable from "./ReportsTable";
-// import { DataGrid } from "@mui/x-data-grid";
-
-// const ReportsTable = ({ reportResults }) => {
-//   const columns = [
-//     { field: "id", headerName: "ID", width: 100 },
-//     { field: "period", headerName: "Period", width: 200 },
-//     { field: "customerName", headerName: "Customer Name", width: 200 },
-//     { field: "orderCount", headerName: "Order Count", width: 150 },
-//   ];
-
-//   const rows = reportResults.flatMap((report) =>
-//     report.customerCounts.map((customer, index) => ({
-//       id: `${report.period}-${index}`,
-//       period: report.period,
-//       customerName: customer.customerName,
-//       orderCount: customer.orderCount,
-//     }))
-//   );
-
-//   return (
-//     <div style={{ height: 400, width: "100%" }}>
-//       <DataGrid rows={rows} columns={columns} />
-//     </div>
-//   );
-// };
+import DuplicatesTable from "./DuplicatesTable";
 
 export default function Reports() {
   const [inputValue, setInputValue] = useState("weekly");
@@ -39,6 +15,8 @@ export default function Reports() {
       generateWeeklyReports();
     } else if (inputValue === "monthly") {
       generateMonthlyReports();
+    } else if (inputValue === "all") {
+      generateAllReports();
     }
     findDuplicateCustomers();
   }, [inputValue]);
@@ -52,46 +30,104 @@ export default function Reports() {
     return date.toLocaleDateString(undefined, options);
   };
 
+  const formatDateRange = (startDate, endDate) => {
+    const startDay = startDate.getDate();
+    const startMonth = startDate.getMonth() + 1;
+    const endDay = endDate.getDate();
+    const endMonth = endDate.getMonth() + 1;
+
+    return `${startDay.toString().padStart(2, "0")}.${startMonth
+      .toString()
+      .padStart(2, "0")} - ${endDay.toString().padStart(2, "0")}.${endMonth
+      .toString()
+      .padStart(2, "0")}`;
+  };
+
+  const formatMonthRange = (startDate, endDate) => {
+    const startDay = startDate.getDate().toString().padStart(2, "0");
+    const startMonth = (startDate.getMonth() + 1).toString().padStart(2, "0");
+    const endDay = endDate.getDate().toString().padStart(2, "0");
+    const endMonth = (endDate.getMonth() + 1).toString().padStart(2, "0");
+
+    return `${startDay}.${startMonth}-${endDay}.${endMonth}`;
+  };
+
+  const generateAllReports = () => {
+    const allResults = {};
+
+    // Initialize order count and customer ID for all customer names
+    ordersData.forEach((order) => {
+      const customerName = order["Customer Name"];
+      allResults[customerName] = {
+        orderCount: 0,
+        customerID: order["Customer ID"], // Include customerID field
+      };
+    });
+
+    ordersData.forEach((order) => {
+      const customerName = order["Customer Name"];
+      allResults[customerName].orderCount += 1;
+    });
+
+    const formattedResults = [
+      {
+        period: "All",
+        customerCounts: Object.entries(allResults).map(
+          ([customerName, { orderCount, customerID }]) => ({
+            customerName,
+            orderCount,
+            customerID, // Include customerID field
+          })
+        ),
+      },
+    ];
+
+    setReportResults(formattedResults);
+  };
+
   const generateWeeklyReports = () => {
-    const startDate = new Date("2023-04-01"); // Set the desired starting date in the format "YYYY-MM-DD"
-    startDate.setDate(startDate.getDate() + (7 - startDate.getDay())); // Set the start date as the first Sunday of the week
+    const startDate = new Date("2023-04-01");
+    startDate.setDate(startDate.getDate() + (7 - startDate.getDay()));
     const currentDate = new Date();
     const weeklyResults = {};
 
     const datesInRange = [];
 
-    // Generate an array of all dates within the range, including previous months
     while (startDate <= currentDate) {
       datesInRange.push(new Date(startDate));
-      startDate.setDate(startDate.getDate() + 7); // Move to the next Sunday
+      startDate.setDate(startDate.getDate() + 7);
     }
 
-    // Reverse the datesInRange array to display results in reverse order
     datesInRange.reverse();
 
     datesInRange.forEach((date) => {
       const weekStart = new Date(date);
-      weekStart.setDate(weekStart.getDate() - weekStart.getDay()); // Get the start date of the week
+      weekStart.setDate(weekStart.getDate() - weekStart.getDay());
 
       const weekEnd = new Date(weekStart);
-      weekEnd.setDate(weekEnd.getDate() + 6); // Get the end date of the week
+      weekEnd.setDate(weekEnd.getDate() + 6);
 
-      const weekRange = `${formatDate(weekStart)} - ${formatDate(weekEnd)}`;
+      const weekRange = formatDateRange(weekStart, weekEnd);
 
       weeklyResults[weekRange] = {};
 
       // Initialize order count to 0 for all customer names
       ordersData.forEach((order) => {
+        const customerID = order["Customer ID"];
         const customerName = order["Customer Name"];
-        weeklyResults[weekRange][customerName] = 0;
+        weeklyResults[weekRange][customerID] = {
+          customerName,
+          orderCount: 0,
+        };
       });
 
       ordersData.forEach((order) => {
         const orderDate = new Date(order["Order Date"]);
 
         if (orderDate >= weekStart && orderDate <= weekEnd) {
+          const customerID = order["Customer ID"];
           const customerName = order["Customer Name"];
-          weeklyResults[weekRange][customerName] += 1;
+          weeklyResults[weekRange][customerID].orderCount += 1;
         }
       });
     });
@@ -100,7 +136,8 @@ export default function Reports() {
       ([weekRange, customerData]) => ({
         period: weekRange,
         customerCounts: Object.entries(customerData).map(
-          ([customerName, orderCount]) => ({
+          ([customerID, { customerName, orderCount }]) => ({
+            customerID,
             customerName,
             orderCount,
           })
@@ -142,14 +179,17 @@ export default function Reports() {
     datesInRange.forEach(({ firstDay, lastDay }) => {
       const monthStart = new Date(firstDay);
       const monthEnd = new Date(lastDay);
-      const monthRange = `${formatDate(monthStart)} - ${formatDate(monthEnd)}`;
+      const monthRange = formatMonthRange(monthStart, monthEnd);
 
       monthlyResults[monthRange] = {};
 
       // Initialize order count to 0 for all customer names
       ordersData.forEach((order) => {
         const customerName = order["Customer Name"];
-        monthlyResults[monthRange][customerName] = 0;
+        monthlyResults[monthRange][customerName] = {
+          orderCount: 0,
+          customerID: order["Customer ID"], // Include customerID field
+        };
       });
 
       ordersData.forEach((order) => {
@@ -157,7 +197,7 @@ export default function Reports() {
 
         if (orderDate >= firstDay && orderDate <= lastDay) {
           const customerName = order["Customer Name"];
-          monthlyResults[monthRange][customerName] += 1;
+          monthlyResults[monthRange][customerName].orderCount += 1;
         }
       });
     });
@@ -166,9 +206,10 @@ export default function Reports() {
       ([monthRange, customerData]) => ({
         period: monthRange,
         customerCounts: Object.entries(customerData).map(
-          ([customerName, orderCount]) => ({
+          ([customerName, { orderCount, customerID }]) => ({
             customerName,
             orderCount,
+            customerID, // Include customerID field
           })
         ),
       })
@@ -185,32 +226,33 @@ export default function Reports() {
       const mobileNumber = order["Mobile Number"];
       const address = order["Address"];
       const customerID = order["Customer ID"];
+      const customerName = order["Customer Name"];
 
       if (!mobileNumbersMap.has(mobileNumber)) {
         mobileNumbersMap.set(mobileNumber, []);
       }
 
-      mobileNumbersMap.get(mobileNumber).push(customerID);
+      mobileNumbersMap.get(mobileNumber).push({ customerID, customerName });
 
       if (!addressesMap.has(address)) {
         addressesMap.set(address, []);
       }
 
-      addressesMap.get(address).push(customerID);
+      addressesMap.get(address).push({ customerID, customerName });
     });
 
     const duplicateMobileNumbers = Array.from(mobileNumbersMap)
-      .filter(([_, customerIDs]) => customerIDs.length > 1)
-      .map(([mobileNumber, customerIDs]) => ({
+      .filter(([_, customers]) => customers.length > 1)
+      .map(([mobileNumber, customers]) => ({
         mobileNumber,
-        customerIDs,
+        customers,
       }));
 
     const duplicateAddressesList = Array.from(addressesMap)
-      .filter(([_, customerIDs]) => customerIDs.length > 1)
-      .map(([address, customerIDs]) => ({
+      .filter(([_, customers]) => customers.length > 1)
+      .map(([address, customers]) => ({
         address,
-        customerIDs,
+        customers,
       }));
 
     setDuplicateCustomers(duplicateMobileNumbers);
@@ -218,37 +260,27 @@ export default function Reports() {
   };
 
   return (
-    <div>
-      <AppBar position="static">
-        <Toolbar>
-          <Tabs value={inputValue} onChange={handleInputChange}>
-            <Tab value="weekly" label="Weekly Reports" />
-            <Tab value="monthly" label="Monthly Reports" />
-          </Tabs>
-        </Toolbar>
-      </AppBar>
-      {/* <ReportsTable reportResults={reportResults} /> */}
-      <ReportsTable reportResults={reportResults} />
-      <div>
-        <h2>Duplicate Customers</h2>
-        <h3>Duplicate Mobile Numbers</h3>
-        <ul>
-          {duplicateCustomers.map((customer, index) => (
-            <li key={index}>
-              Mobile Number: {customer.mobileNumber}, Customers:{" "}
-              {customer.customerIDs.join(", ")}
-            </li>
-          ))}
-        </ul>
-        <h3>Duplicate Addresses</h3>
-        <ul>
-          {duplicateAddresses.map((address, index) => (
-            <li key={index}>
-              Address: {address.address}, Customers:{" "}
-              {address.customerIDs.join(", ")}
-            </li>
-          ))}
-        </ul>
+    <div style={{ display: "flex", width: "calc(100vw - 250px)" }}>
+      <div style={{ width: "100%", display: "flex", gap: "5%" }}>
+        <div style={{ width: "60%", border: "1px solid #C9C9C9" }}>
+          <AppBar position="static" sx={{ background: "none" }}>
+            <Toolbar>
+              <Tabs value={inputValue} onChange={handleInputChange}>
+                <Tab value="all" label="All" />
+                <Tab value="weekly" label="Weekly Reports" />
+                <Tab value="monthly" label="Monthly Reports" />
+              </Tabs>
+            </Toolbar>
+          </AppBar>
+          {/* <ReportsTable reportResults={reportResults} /> */}
+          <ReportsTable reportResults={reportResults} />
+        </div>
+        <div style={{ width: "30%" }}>
+          <DuplicatesTable
+            duplicateCustomers={duplicateCustomers}
+            duplicateAddresses={duplicateAddresses}
+          />
+        </div>
       </div>
     </div>
   );

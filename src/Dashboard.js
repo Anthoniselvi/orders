@@ -14,12 +14,13 @@ import ListItemText from "@mui/material/ListItemText";
 import HomeIcon from "@mui/icons-material/Home";
 import MailIcon from "@mui/icons-material/Mail";
 import GetReports from "./GetReports";
+import { calculateNewValue } from "@testing-library/user-event/dist/utils";
 
 const drawerWidth = 200;
 
 export default function Dashboard() {
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", width: "100vw", height: "100%" }}>
       <CssBaseline />
       <AppBar
         position="fixed"
@@ -82,7 +83,16 @@ export default function Dashboard() {
           ))}
         </List> */}
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, bgcolor: "#E9F1FF", p: 3 }}>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          bgcolor: "#E9F1FF",
+          p: 3,
+          width: `calc(100vw - ${drawerWidth})`,
+          height: "100%",
+        }}
+      >
         <Toolbar />
         <GetReports />
       </Box>
