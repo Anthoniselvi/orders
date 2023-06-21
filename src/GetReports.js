@@ -1,22 +1,55 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { AppBar, Toolbar, Tabs, Tab } from "@mui/material";
 import { ordersData } from "./ordersData";
+import ReportsTable from "./ReportsTable";
+// import { DataGrid } from "@mui/x-data-grid";
 
-export default function GetReports() {
-  const [inputValue, setInputValue] = useState("");
+// const ReportsTable = ({ reportResults }) => {
+//   const columns = [
+//     { field: "id", headerName: "ID", width: 100 },
+//     { field: "period", headerName: "Period", width: 200 },
+//     { field: "customerName", headerName: "Customer Name", width: 200 },
+//     { field: "orderCount", headerName: "Order Count", width: 150 },
+//   ];
+
+//   const rows = reportResults.flatMap((report) =>
+//     report.customerCounts.map((customer, index) => ({
+//       id: `${report.period}-${index}`,
+//       period: report.period,
+//       customerName: customer.customerName,
+//       orderCount: customer.orderCount,
+//     }))
+//   );
+
+//   return (
+//     <div style={{ height: 400, width: "100%" }}>
+//       <DataGrid rows={rows} columns={columns} />
+//     </div>
+//   );
+// };
+
+export default function Reports() {
+  const [inputValue, setInputValue] = useState("weekly");
   const [reportResults, setReportResults] = useState([]);
   const [duplicateCustomers, setDuplicateCustomers] = useState([]);
   const [duplicateAddresses, setDuplicateAddresses] = useState([]);
 
-  const handleInputChange = (e) => {
-    const selectedValue = e.target.value;
-    setInputValue(selectedValue);
+  useEffect(() => {
+    if (inputValue === "weekly") {
+      generateWeeklyReports();
+    } else if (inputValue === "monthly") {
+      generateMonthlyReports();
+    }
+    findDuplicateCustomers();
+  }, [inputValue]);
+
+  const handleInputChange = (event, newValue) => {
+    setInputValue(newValue);
   };
 
   const formatDate = (date) => {
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
-    return day + "." + month + "." + year;
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return date.toLocaleDateString(undefined, options);
   };
 
   const generateWeeklyReports = () => {
@@ -77,6 +110,7 @@ export default function GetReports() {
 
     setReportResults(formattedResults);
   };
+
   const generateMonthlyReports = () => {
     const startDate = new Date("2023-04-01"); // Set the desired starting date in the format "YYYY-MM-DD"
     const currentDate = new Date();
@@ -144,37 +178,35 @@ export default function GetReports() {
   };
 
   const findDuplicateCustomers = () => {
-    const mobileNumbers = {};
-    const addresses = {};
+    const mobileNumbersMap = new Map();
+    const addressesMap = new Map();
 
     ordersData.forEach((order) => {
-      const customerID = order["Customer ID"];
       const mobileNumber = order["Mobile Number"];
       const address = order["Address"];
+      const customerID = order["Customer ID"];
 
-      // Group by mobile number
-      if (mobileNumbers[mobileNumber]) {
-        mobileNumbers[mobileNumber].push(customerID);
-      } else {
-        mobileNumbers[mobileNumber] = [customerID];
+      if (!mobileNumbersMap.has(mobileNumber)) {
+        mobileNumbersMap.set(mobileNumber, []);
       }
 
-      // Group by address
-      if (addresses[address]) {
-        addresses[address].push(customerID);
-      } else {
-        addresses[address] = [customerID];
+      mobileNumbersMap.get(mobileNumber).push(customerID);
+
+      if (!addressesMap.has(address)) {
+        addressesMap.set(address, []);
       }
+
+      addressesMap.get(address).push(customerID);
     });
 
-    const duplicateMobileNumbers = Object.entries(mobileNumbers)
+    const duplicateMobileNumbers = Array.from(mobileNumbersMap)
       .filter(([_, customerIDs]) => customerIDs.length > 1)
       .map(([mobileNumber, customerIDs]) => ({
         mobileNumber,
         customerIDs,
       }));
 
-    const duplicateAddressesList = Object.entries(addresses)
+    const duplicateAddressesList = Array.from(addressesMap)
       .filter(([_, customerIDs]) => customerIDs.length > 1)
       .map(([address, customerIDs]) => ({
         address,
@@ -184,115 +216,39 @@ export default function GetReports() {
     setDuplicateCustomers(duplicateMobileNumbers);
     setDuplicateAddresses(duplicateAddressesList);
   };
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (inputValue === "weekly") {
-      generateWeeklyReports();
-    } else if (inputValue === "monthly") {
-      generateMonthlyReports();
-    } else {
-      setReportResults([]); // Clear the report results if no option is selected
-    }
-
-    findDuplicateCustomers();
-  };
-
-  const getAllCustomerNames = (reportResults) => {
-    const customerNames = {};
-    reportResults.forEach((result) => {
-      result.customerCounts.forEach((customerData) => {
-        const customerName = customerData.customerName;
-        customerNames[customerName] = true;
-      });
-    });
-    return customerNames;
-  };
-
-  const getOrderCountForCustomer = (customerCounts, customerName) => {
-    const customerData = customerCounts.find(
-      (customer) => customer.customerName === customerName
-    );
-    return customerData ? customerData.orderCount : 0;
-  };
 
   return (
     <div>
-      <h1>Reports</h1>
-      <form onSubmit={handleSubmit}>
-        <select
-          name="inputValue"
-          value={inputValue}
-          onChange={handleInputChange}
-        >
-          <option value="">Select an option</option>
-          <option value="weekly">Weekly</option>
-          <option value="monthly">Monthly</option>
-        </select>
-
-        <button type="submit">Submit</button>
-      </form>
-      <div style={{ display: "flex", gap: "5%" }}>
-        {reportResults.length > 0 && (
-          <div style={{ width: "65%", overflowX: "scroll" }}>
-            <h2>Report Results:</h2>
-            <table>
-              <thead>
-                <tr>
-                  <th>Customer Name</th>
-                  {reportResults.map((result, index) => (
-                    <th key={index}>{result.period}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {Object.keys(getAllCustomerNames(reportResults)).map(
-                  (customerName, index) => (
-                    <tr key={index}>
-                      <td>{customerName}</td>
-                      {reportResults.map((result, index) => (
-                        <td key={index}>
-                          {getOrderCountForCustomer(
-                            result.customerCounts,
-                            customerName
-                          )}
-                        </td>
-                      ))}
-                    </tr>
-                  )
-                )}
-              </tbody>
-            </table>
-          </div>
-        )}
-        <div style={{ width: "30%", overflowX: "scroll" }}>
-          {duplicateCustomers.length > 0 && (
-            <div>
-              <h2>Duplicate Customers:</h2>
-              <ul>
-                {duplicateCustomers.map((customer, index) => (
-                  <li key={index}>
-                    Mobile Number: {customer.mobileNumber}, Customer IDs:{" "}
-                    {customer.customerIDs.join(", ")}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-          {duplicateAddresses.length > 0 && (
-            <div>
-              <h2>Duplicate Customers by Address:</h2>
-              <ul>
-                {duplicateAddresses.map((customer, index) => (
-                  <li key={index}>
-                    Address: {customer.address}, Customer IDs:{" "}
-                    {customer.customerIDs.join(", ")}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
+      <AppBar position="static">
+        <Toolbar>
+          <Tabs value={inputValue} onChange={handleInputChange}>
+            <Tab value="weekly" label="Weekly Reports" />
+            <Tab value="monthly" label="Monthly Reports" />
+          </Tabs>
+        </Toolbar>
+      </AppBar>
+      {/* <ReportsTable reportResults={reportResults} /> */}
+      <ReportsTable reportResults={reportResults} />
+      <div>
+        <h2>Duplicate Customers</h2>
+        <h3>Duplicate Mobile Numbers</h3>
+        <ul>
+          {duplicateCustomers.map((customer, index) => (
+            <li key={index}>
+              Mobile Number: {customer.mobileNumber}, Customers:{" "}
+              {customer.customerIDs.join(", ")}
+            </li>
+          ))}
+        </ul>
+        <h3>Duplicate Addresses</h3>
+        <ul>
+          {duplicateAddresses.map((address, index) => (
+            <li key={index}>
+              Address: {address.address}, Customers:{" "}
+              {address.customerIDs.join(", ")}
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

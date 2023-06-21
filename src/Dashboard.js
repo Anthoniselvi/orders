@@ -11,7 +11,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
+import HomeIcon from "@mui/icons-material/Home";
 import MailIcon from "@mui/icons-material/Mail";
 import GetReports from "./GetReports";
 
@@ -23,10 +23,20 @@ export default function Dashboard() {
       <CssBaseline />
       <AppBar
         position="fixed"
-        sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
+        sx={{
+          width: `calc(100% - ${drawerWidth}px)`,
+          ml: `${drawerWidth}px`,
+          bgcolor: "#f0f6ff",
+          color: "#353535",
+        }}
       >
         <Toolbar>
-          <Typography variant="h6" noWrap component="div">
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{ fontFamily: "Poppins", fontWeight: 600 }}
+          >
             Orders List
           </Typography>
         </Toolbar>
@@ -38,6 +48,7 @@ export default function Dashboard() {
           "& .MuiDrawer-paper": {
             width: drawerWidth,
             boxSizing: "border-box",
+            bgcolor: "#f0f6ff",
           },
         }}
         variant="permanent"
@@ -46,11 +57,11 @@ export default function Dashboard() {
         <Toolbar />
         <Divider />
         <List>
-          {["All", "Weekly", "Monthly"].map((text, index) => (
+          {["Home"].map((text, index) => (
             <ListItem key={text} disablePadding>
               <ListItemButton>
                 <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  {index % 2 === 0 ? <HomeIcon /> : <MailIcon />}
                 </ListItemIcon>
                 <ListItemText primary={text} />
               </ListItemButton>
@@ -71,10 +82,7 @@ export default function Dashboard() {
           ))}
         </List> */}
       </Drawer>
-      <Box
-        component="main"
-        sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
-      >
+      <Box component="main" sx={{ flexGrow: 1, bgcolor: "#E9F1FF", p: 3 }}>
         <Toolbar />
         <GetReports />
       </Box>
