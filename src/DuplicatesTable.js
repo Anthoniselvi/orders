@@ -10,11 +10,11 @@ export default function DuplicatesTable({
     {
       field: "mobileNumber",
       headerName: "Mobile Number",
-      width: 200,
+      width: 150,
       cellStyle: { color: "blue" },
     },
-    { field: "customerID", headerName: "Customer ID", width: 200 },
-    { field: "customerName", headerName: "Customer Name", width: 200 },
+    { field: "customerID", headerName: "Customer ID", width: 150 },
+    { field: "customerName", headerName: "Customer Name", width: 150 },
   ];
 
   const duplicateMobileRows = duplicateCustomers.flatMap((duplicate) =>
@@ -27,9 +27,9 @@ export default function DuplicatesTable({
   );
 
   const duplicateAddressColumns = [
-    { field: "address", headerName: "Address", width: 200 },
-    { field: "customerID", headerName: "Customer ID", width: 200 },
-    { field: "customerName", headerName: "Customer Name", width: 200 },
+    { field: "address", headerName: "Address", width: 150 },
+    { field: "customerID", headerName: "Customer ID", width: 150 },
+    { field: "customerName", headerName: "Customer Name", width: 150 },
   ];
 
   const duplicateAddressRows = duplicateAddresses.flatMap((address, index) =>

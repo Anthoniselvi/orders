@@ -88,7 +88,7 @@ export default function Dashboard() {
         sx={{
           flexGrow: 1,
           bgcolor: "#E9F1FF",
-          p: 3,
+          padding: "2%",
           width: `calc(100vw - ${drawerWidth})`,
           height: "100%",
         }}

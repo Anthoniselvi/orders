@@ -261,8 +261,9 @@ export default function Reports() {
 
   return (
     <div style={{ display: "flex", width: "calc(100vw - 250px)" }}>
-      <div style={{ width: "100%", display: "flex", gap: "5%" }}>
-        <div style={{ width: "60%", border: "1px solid #C9C9C9" }}>
+      <div style={{ width: "100%", display: "flex", gap: "3%" }}>
+        <div style={{ width: "60%" }}>
+          <h3>Duplicate by Mobile Numbers</h3>
           <AppBar position="static" sx={{ background: "none" }}>
             <Toolbar>
               <Tabs value={inputValue} onChange={handleInputChange}>
@@ -275,7 +276,7 @@ export default function Reports() {
           {/* <ReportsTable reportResults={reportResults} /> */}
           <ReportsTable reportResults={reportResults} />
         </div>
-        <div style={{ width: "30%" }}>
+        <div style={{ width: "37%" }}>
           <DuplicatesTable
             duplicateCustomers={duplicateCustomers}
             duplicateAddresses={duplicateAddresses}
