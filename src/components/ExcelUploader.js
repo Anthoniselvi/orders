@@ -42,7 +42,7 @@ const ExcelUploader = ({ setOrdersData }) => {
 
   return (
     <div>
-      {/* <h2 style={{ marginBottom: "20%" }}>Upload Orders List</h2> */}
+      <h2 style={{ marginBottom: "20%" }}>Upload file to Generate Reports</h2>
       <form
         onSubmit={handleSubmit}
         style={{

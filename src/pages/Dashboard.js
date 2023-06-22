@@ -87,9 +87,7 @@ export default function Dashboard({ setOrdersData }) {
           justifyContent: "center",
         }}
       >
-        {/* <Toolbar /> */}
         <ExcelUploader setOrdersData={setOrdersData} />
-        {/* <GetReports /> */}
       </Box>
     </Box>
   );
