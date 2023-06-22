@@ -38,7 +38,7 @@ export default function Dashboard({ setOrdersData }) {
             component="div"
             sx={{ fontFamily: "Poppins", fontWeight: 600 }}
           >
-            Home
+            Upload Orders List
           </Typography>
         </Toolbar>
       </AppBar>
@@ -83,18 +83,6 @@ export default function Dashboard({ setOrdersData }) {
           ))}
         </List>
         <Divider />
-        {/* <List>
-          {["All", "Weekly", "Monthly"].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List> */}
       </Drawer>
       <Box
         component="main"

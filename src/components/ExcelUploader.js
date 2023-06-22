@@ -42,14 +42,15 @@ const ExcelUploader = ({ setOrdersData }) => {
 
   return (
     <div>
+      {/* <h2 style={{ marginBottom: "20%" }}>Upload Orders List</h2> */}
       <form
         onSubmit={handleSubmit}
         style={{
           display: "flex",
-          // flexDirection: "column",
+          flexDirection: "column",
           gap: "20px",
-          alignItems: "center",
-          justifyContent: "center",
+          alignItems: "left",
+          justifyContent: "left",
         }}
       >
         <input
