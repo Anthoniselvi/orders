@@ -49,7 +49,7 @@ export default function GetReports({ ordersData }) {
     const endDay = endDate.getDate().toString().padStart(2, "0");
     const endMonth = (endDate.getMonth() + 1).toString().padStart(2, "0");
 
-    return `${startDay}.${startMonth}-${endDay}.${endMonth}`;
+    return `${startDay}/${startMonth}-${endDay}/${endMonth}`;
   };
 
   const generateAllReports = () => {

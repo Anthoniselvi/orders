@@ -5,12 +5,18 @@ import { DataGrid } from "@mui/x-data-grid";
 export default function ReportsTable({ reportResults }) {
   const periods = reportResults.map((report) => report.period);
   const columns = [
-    { field: "customerID", headerName: "Customer ID", width: 100 },
-    { field: "customerName", headerName: "Customer Name", width: 150 },
+    { field: "customerID", headerName: "Customer ID", width: 150 },
+    {
+      field: "customerName",
+      headerName: "Customer Name",
+      width: 150,
+      align: "left",
+    },
     ...periods.map((period) => ({
       field: period,
       headerName: period,
       width: 100,
+      align: "center",
     })),
   ];
 
