@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { AppBar, Toolbar, Tabs, Tab } from "@mui/material";
-import { ordersData } from "./ordersData";
+// import { ordersData } from "./ordersData";
 import ReportsTable from "./ReportsTable";
 import DuplicatesTable from "./DuplicatesTable";
 
-export default function Reports() {
+export default function GetReports({ ordersData }) {
   const [inputValue, setInputValue] = useState("weekly");
   const [reportResults, setReportResults] = useState([]);
   const [duplicateCustomers, setDuplicateCustomers] = useState([]);
@@ -19,7 +19,7 @@ export default function Reports() {
       generateAllReports();
     }
     findDuplicateCustomers();
-  }, [inputValue]);
+  }, [inputValue, ordersData]);
 
   const handleInputChange = (event, newValue) => {
     setInputValue(newValue);
@@ -260,9 +260,17 @@ export default function Reports() {
   };
 
   return (
-    <div style={{ display: "flex", width: "calc(100vw - 250px)" }}>
-      <div style={{ width: "100%", display: "flex", gap: "3%" }}>
-        <div style={{ width: "60%" }}>
+    <div
+      style={{
+        display: "flex",
+        width: "calc(100vw - 250px)",
+        height: "calc(100vh - 100px)",
+      }}
+    >
+      <div
+        style={{ width: "100%", height: "100%", display: "flex", gap: "5%" }}
+      >
+        <div style={{ width: "60%", height: "100%" }}>
           <h3>Orders - Reports</h3>
           <AppBar position="static" sx={{ background: "none" }}>
             <Toolbar>
@@ -276,7 +284,7 @@ export default function Reports() {
           {/* <ReportsTable reportResults={reportResults} /> */}
           <ReportsTable reportResults={reportResults} />
         </div>
-        <div style={{ width: "37%" }}>
+        <div style={{ width: "35%", height: "100%" }}>
           <DuplicatesTable
             duplicateCustomers={duplicateCustomers}
             duplicateAddresses={duplicateAddresses}

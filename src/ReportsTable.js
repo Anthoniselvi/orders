@@ -5,12 +5,12 @@ import { DataGrid } from "@mui/x-data-grid";
 export default function ReportsTable({ reportResults }) {
   const periods = reportResults.map((report) => report.period);
   const columns = [
-    { field: "customerID", headerName: "Customer ID", width: 200 },
-    { field: "customerName", headerName: "Customer Name", width: 200 },
+    { field: "customerID", headerName: "Customer ID", width: 100 },
+    { field: "customerName", headerName: "Customer Name", width: 150 },
     ...periods.map((period) => ({
       field: period,
       headerName: period,
-      width: 150,
+      width: 100,
     })),
   ];
 
@@ -35,11 +35,11 @@ export default function ReportsTable({ reportResults }) {
   }, []);
 
   return (
-    <Box sx={{ height: 400, width: "100%", bgcolor: "#ffffff" }}>
+    <Box sx={{ height: "80%", width: "100%", bgcolor: "#ffffff" }}>
       <DataGrid
         rows={rows}
         columns={columns}
-        pageSize={5}
+        pageSize={10}
         // checkboxSelection
         disableSelectionOnClick
       />
