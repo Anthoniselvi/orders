@@ -42,9 +42,40 @@ const ExcelUploader = ({ setOrdersData }) => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <input type="file" accept=".xlsx" onChange={handleFileUpload} />
-        <button type="submit">Submit</button>
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          display: "flex",
+          // flexDirection: "column",
+          gap: "20px",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <input
+          type="file"
+          accept=".xlsx"
+          onChange={handleFileUpload}
+          style={{
+            padding: "5px 10x",
+            borderRadius: "5px",
+            width: "300px",
+            height: "50px",
+          }}
+        />
+        <button
+          type="submit"
+          style={{
+            padding: "5px 10x",
+            borderRadius: "5px",
+            width: "150px",
+            height: "40px",
+            backgroundColor: "#3480FA",
+            border: "none",
+          }}
+        >
+          Submit
+        </button>
       </form>
     </div>
   );

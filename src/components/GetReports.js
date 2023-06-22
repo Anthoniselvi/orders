@@ -24,11 +24,6 @@ export default function GetReports({ ordersData }) {
     setInputValue(newValue);
   };
 
-  const formatDate = (date) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
-    return date.toLocaleDateString(undefined, options);
-  };
-
   const formatDateRange = (startDate, endDate) => {
     const startDay = startDate.getDate();
     const startMonth = startDate.getMonth() + 1;
@@ -125,7 +120,7 @@ export default function GetReports({ ordersData }) {
 
         if (orderDate >= weekStart && orderDate <= weekEnd) {
           const customerID = order["Customer ID"];
-          const customerName = order["Customer Name"];
+          // const customerName = order["Customer Name"];
           weeklyResults[weekRange][customerID].orderCount += 1;
         }
       });

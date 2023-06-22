@@ -14,6 +14,7 @@ import ListItemText from "@mui/material/ListItemText";
 import HomeIcon from "@mui/icons-material/Home";
 import MailIcon from "@mui/icons-material/Mail";
 import GetReports from "../components/GetReports";
+import { Link } from "react-router-dom";
 
 const drawerWidth = 200;
 
@@ -59,12 +60,25 @@ export default function Orders({ ordersData }) {
         <List>
           {["Home", "Orders"].map((text, index) => (
             <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <HomeIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
+              {index === 0 ? (
+                <Link to="/">
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <HomeIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={text} />
+                  </ListItemButton>
+                </Link>
+              ) : (
+                <Link to="/orders">
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <MailIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={text} />
+                  </ListItemButton>
+                </Link>
+              )}
             </ListItem>
           ))}
         </List>
