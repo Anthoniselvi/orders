@@ -18,7 +18,8 @@
     "react-router-dom": "^6.13.0",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "@babel/plugin-proposal-private-property-in-object": "^x.x.x"
   },
   "scripts": {
     "start": "react-scripts start",
