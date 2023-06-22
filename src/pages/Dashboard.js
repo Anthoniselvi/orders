@@ -22,7 +22,7 @@ export default function Dashboard({ setOrdersData }) {
   return (
     <Box sx={{ display: "flex", width: "100vw", height: "100%" }}>
       <CssBaseline />
-      <AppBar
+      {/* <AppBar
         position="fixed"
         sx={{
           width: `calc(100% - ${drawerWidth}px)`,
@@ -41,7 +41,7 @@ export default function Dashboard({ setOrdersData }) {
             Upload Orders List
           </Typography>
         </Toolbar>
-      </AppBar>
+      </AppBar> */}
       <Drawer
         sx={{
           width: drawerWidth,
@@ -58,27 +58,16 @@ export default function Dashboard({ setOrdersData }) {
         <Toolbar />
         <Divider />
         <List>
-          {["Home", "Orders"].map((text, index) => (
+          {["Home"].map((text, index) => (
             <ListItem key={text} disablePadding>
-              {index === 0 ? (
-                <Link to="/">
-                  <ListItemButton>
-                    <ListItemIcon>
-                      <HomeIcon />
-                    </ListItemIcon>
-                    <ListItemText primary={text} />
-                  </ListItemButton>
-                </Link>
-              ) : (
-                <Link to="/orders">
-                  <ListItemButton>
-                    <ListItemIcon>
-                      <MailIcon />
-                    </ListItemIcon>
-                    <ListItemText primary={text} />
-                  </ListItemButton>
-                </Link>
-              )}
+              <Link to="/">
+                <ListItemButton>
+                  <ListItemIcon>
+                    <HomeIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={text} />
+                </ListItemButton>
+              </Link>
             </ListItem>
           ))}
         </List>

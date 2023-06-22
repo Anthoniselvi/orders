@@ -10,7 +10,7 @@ export default function DuplicatesTable({
         <h3
           style={{ textAlign: "left", color: "#3480FA", paddingLeft: "20px" }}
         >
-          Mobile Number: {duplicate.mobileNumber}
+          {duplicate.mobileNumber}
         </h3>
 
         {duplicate.customers.map((customer, i) => (
@@ -54,36 +54,41 @@ export default function DuplicatesTable({
         alignItems: "left",
       }}
     >
-      <h3>Duplicate Entries</h3>
-      <div
-        style={{
-          alignItems: "left",
-          height: "45%",
-          overflowY: "scroll",
-          border: "1px solid #C9C9C9",
-          marginBottom: "25px",
-          borderRadius: "10px",
-          backgroundColor: "#fff",
-          paddingLeft: "20px",
-        }}
-      >
-        {/* <h3>Duplicates by Mobile Number:</h3> */}
-        {renderMobileDuplicates()}
-      </div>
-      <div
-        style={{
-          alignItems: "left",
-          height: "45%",
-          overflowY: "scroll",
-          border: "1px solid #C9C9C9",
-          borderRadius: "10px",
-          backgroundColor: "#fff",
-          paddingLeft: "20px",
-        }}
-      >
-        {/* <h3>Duplicates by Address:</h3> */}
-        {renderAddressDuplicates()}
-      </div>
+      <>
+        <h3>Duplicate Entries by Mobile Number</h3>
+        <div
+          style={{
+            alignItems: "left",
+            height: "45%",
+            overflowY: "scroll",
+            border: "1px solid #C9C9C9",
+            marginBottom: "25px",
+            borderRadius: "10px",
+            backgroundColor: "#fff",
+            paddingLeft: "20px",
+          }}
+        >
+          {/* <h3>Duplicates by Mobile Number:</h3> */}
+          {renderMobileDuplicates()}
+        </div>
+      </>
+      <>
+        <h3>Duplicate Entries by Address</h3>
+        <div
+          style={{
+            alignItems: "left",
+            height: "45%",
+            overflowY: "scroll",
+            border: "1px solid #C9C9C9",
+            borderRadius: "10px",
+            backgroundColor: "#fff",
+            paddingLeft: "20px",
+          }}
+        >
+          {/* <h3>Duplicates by Address:</h3> */}
+          {renderAddressDuplicates()}
+        </div>
+      </>
     </div>
   );
 }
