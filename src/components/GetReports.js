@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { AppBar, Toolbar, Tabs, Tab } from "@mui/material";
-// import { ordersData } from "./ordersData";
 import ReportsTable from "./ReportsTable";
 import DuplicatesTable from "./DuplicatesTable";
 
