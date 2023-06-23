@@ -54,7 +54,7 @@ export default function DuplicatesTable({
         alignItems: "left",
       }}
     >
-      <>
+      <div>
         <h3>Duplicate Entries by Mobile Number</h3>
         <div
           style={{
@@ -71,8 +71,8 @@ export default function DuplicatesTable({
           {/* <h3>Duplicates by Mobile Number:</h3> */}
           {renderMobileDuplicates()}
         </div>
-      </>
-      <>
+      </div>
+      <div>
         <h3>Duplicate Entries by Address</h3>
         <div
           style={{
@@ -88,7 +88,7 @@ export default function DuplicatesTable({
           {/* <h3>Duplicates by Address:</h3> */}
           {renderAddressDuplicates()}
         </div>
-      </>
+      </div>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import * as XLSX from "xlsx";
+import { read, utils } from "xlsx";
 import { useNavigate } from "react-router-dom";
 
 const ExcelUploader = ({ setOrdersData }) => {
@@ -8,14 +8,14 @@ const ExcelUploader = ({ setOrdersData }) => {
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
-    const fileReader = new FileReader();
+    const reader = new FileReader();
 
-    fileReader.onload = (e) => {
+    reader.onload = (e) => {
       const data = new Uint8Array(e.target.result);
-      const workbook = XLSX.read(data, { type: "array" });
+      const workbook = read(data, { type: "array" });
 
       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+      const jsonData = utils.sheet_to_json(worksheet, { header: 1 });
 
       const headers = jsonData[0];
       const ordersData = jsonData.slice(1).map((row) => {
@@ -29,7 +29,7 @@ const ExcelUploader = ({ setOrdersData }) => {
       setDataArray(ordersData);
     };
 
-    fileReader.readAsArrayBuffer(file);
+    reader.readAsArrayBuffer(file);
   };
 
   const handleSubmit = (e) => {
@@ -58,7 +58,7 @@ const ExcelUploader = ({ setOrdersData }) => {
           accept=".xlsx"
           onChange={handleFileUpload}
           style={{
-            padding: "5px 10x",
+            padding: "5px 10px",
             borderRadius: "5px",
             width: "300px",
             height: "50px",
@@ -67,7 +67,7 @@ const ExcelUploader = ({ setOrdersData }) => {
         <button
           type="submit"
           style={{
-            padding: "5px 10x",
+            padding: "5px 10px",
             borderRadius: "5px",
             width: "150px",
             height: "40px",
